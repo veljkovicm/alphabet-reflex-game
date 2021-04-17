@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { colors } from './constants';
 
 
 import './App.css';
@@ -63,9 +64,36 @@ const App = () => {
     }
   }
 
+  const guessNumber = (e) => {
+    if(!e.target.value.match(/[a-zA-Z]/)) {
+      return;
+    }
+    setInputVal(e.target.value);
+
+    const currentLetter = (current + 9).toString(36).toUpperCase();
+
+    const indexOfCurrent = letters.indexOf(letters.find((e) => e.position === current));
+
+    if(currentLetter === e.target.value.toUpperCase()) {
+      letters[indexOfCurrent].status = 'hit';
+
+      setScore((prevState) => ({
+        ...prevState,
+        hit: prevState.hit + 1,
+      }));
+    } else {
+      letters[indexOfCurrent].status = 'miss';
+      setScore((prevState) => ({
+        ...prevState,
+        miss: prevState.miss + 1,
+      }));
+    }
+    generateNumber();
+  }
+
   const lettersMarkup = (
     letters.map((l) => (
-      <span key={l.position}>{l.letter.toUpperCase()}</span>
+      <span key={l.position}  style={{ color: colors[l.status] }}>{l.letter.toUpperCase()}</span>
     ))
   );
 
@@ -78,7 +106,14 @@ const App = () => {
       </div>
       <button type="button">start game</button>
       <p>{current}</p>
-      <input type="text" value={inputVal} placeholder="Input letter" maxLength="1" />
+      <input
+        disabled={!gameInProgress}
+        type="text"
+        onChange={guessNumber}
+        value={inputVal}
+        maxLength="1"
+        placeholder="Input letter"
+      />
       <div className="letters-wrapper">{lettersMarkup}</div>
       <div>
         <h4>SCORE</h4>
