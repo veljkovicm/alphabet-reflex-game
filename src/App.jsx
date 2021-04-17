@@ -16,6 +16,11 @@ const App = () => {
   const [ current, setCurrent ] = useState(0);
   const [ inputVal, setInputVal ] = useState('');
   const [ difficulty, setDifficulty ] = useState('medium');
+  const [ score, setScore ] = useState({
+    hit: 0,
+    miss: 0,
+    left: 26,
+  });
 
   const lettersMarkdown = (
     letters.map((l) => (
@@ -34,6 +39,12 @@ const App = () => {
       <p>{current}</p>
       <input type="text" value={inputVal} placeholder="Input letter" maxLength="1" />
       <div className="letters-wrapper">{lettersMarkdown}</div>
+      <div>
+        <h4>SCORE</h4>
+        <p>{`Hit: ${score.hit}`}</p>
+        <p>{`Miss: ${score.miss}`}</p>
+        <p>{`Left: ${score.left}`}</p>
+      </div>
     </div>
   );
 }
