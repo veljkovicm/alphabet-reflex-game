@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { difficultyOptions } from './constants';
+import { formatAlphabet } from './helpers';
 import {
   Button,
   Difficulty,
@@ -12,14 +13,9 @@ import './App.css';
 
 
 const App = () => {
-  const alphabet = String.fromCharCode(...Array(123).keys()).slice(97).split('');
   const alphabetNumbers = Array.from(Array(27).keys()).slice(1);
 
-  const formattedAlphabet = alphabet.map((letter) => ({
-    position: alphabet.indexOf(letter) + 1,
-    status: 'open',
-    letter,
-  }));
+  const formattedAlphabet = formatAlphabet();
 
   const [ letters, setLetters ] = useState(formattedAlphabet);
   const [ current, setCurrent ] = useState(0);
@@ -43,21 +39,16 @@ const App = () => {
 
       return () => clearInterval(interval);
     }
-  }, [ current, gameInProgress ]);
-
+  }, [ gameInProgress, numbers ]);
 
   const generateNumber = () => {
     if(myInterval === 0) {
       setMyInterval(difficultyOptions[difficulty].timeout);
     }
     setInputVal('');
-
-    if(current > 0 && letters[current - 1].status === 'open') {
+    if(current > 0 && letters[current - 1].status == 'open') {
       letters[current - 1].status = 'miss';
-      setScore((prevState) => ({
-        ...prevState,
-        miss: prevState.miss + 1,
-      }));
+      updateScore('miss');
     }
 
     const randomElement = numbers[Math.floor(Math.random() * numbers.length)];
@@ -68,6 +59,7 @@ const App = () => {
 
     if(!numbers.length) {
       setGameInProgress(false);
+      setMyInterval(0);
     }
   }
 
@@ -83,23 +75,17 @@ const App = () => {
 
     if(currentLetter === e.target.value.toUpperCase()) {
       letters[indexOfCurrent].status = 'hit';
-
-      setScore((prevState) => ({
-        ...prevState,
-        hit: prevState.hit + 1,
-      }));
+      updateScore('hit');
     } else {
       letters[indexOfCurrent].status = 'miss';
-      setScore((prevState) => ({
-        ...prevState,
-        miss: prevState.miss + 1,
-      }));
+      updateScore('miss');
     }
     generateNumber();
   }
 
   const startGame = () => {
     setLetters(formattedAlphabet);
+    setNumbers(alphabetNumbers);
     setCurrent(0);
     setScore({
       hit: 0,
@@ -118,7 +104,18 @@ const App = () => {
       miss: 0,
       left: 26,
     });
+    setMyInterval(0);
   }
+
+
+  const updateScore = (field) => {
+    setScore((prevState) => ({
+      ...prevState,
+      [field]: prevState[field] + 1,
+      left: numbers.length,
+    }));
+  }
+
 
   return (
     <div className="App">
