@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import TextField from '@material-ui/core/TextField';
 
 const Input = (props) => {
   const {
@@ -7,17 +8,23 @@ const Input = (props) => {
     inputVal,
   } = props;
 
+  const inputProps = {
+    disabled: !gameInProgress,
+    onChange: guessNumber,
+    value: inputVal,
+    maxLength: "1",
+  }
+
   return (
-    <>
-      <input
-        disabled={!gameInProgress}
-        type="text"
-        onChange={guessNumber}
-        value={inputVal}
+    <div className="input-wrapper">
+      <TextField
+        inputProps={inputProps}
+        id="outlined-basic"
         maxLength="1"
-        placeholder="Input letter"
+        label="Input letter"
+        variant="outlined"
       />
-    </>
+    </div>
   )
 }
 

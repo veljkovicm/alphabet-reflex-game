@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { default as ButtonMUI} from '@material-ui/core/Button';
 
 const Button = (props) => {
   const {
@@ -8,9 +9,15 @@ const Button = (props) => {
   } = props;
 
   return (
-    <>
-      <button type="button" onClick={!gameInProgress ? startGame : stopGame}>{!gameInProgress ? 'Start game' : 'Stop game'}</button>
-    </>
+    <div className="button-wrapper">
+      <ButtonMUI
+        variant="contained"
+        color="primary"
+        onClick={!gameInProgress ? startGame : stopGame}
+      >
+        {!gameInProgress ? 'Start game' : 'Stop game'}
+      </ButtonMUI>
+    </div>
   )
 }
 
