@@ -15,6 +15,7 @@ const App = () => {
   const [ letters, setLetters ] = useState(formattedAlphabet);
   const [ current, setCurrent ] = useState(0);
   const [ inputVal, setInputVal ] = useState('');
+  const [ difficulty, setDifficulty ] = useState('medium');
 
   const lettersMarkdown = (
     letters.map((l) => (
@@ -24,6 +25,11 @@ const App = () => {
 
   return (
     <div className="App">
+      <div>
+        <label><input type="radio" value="easy" checked={difficulty === 'easy'} onChange={() => setDifficulty('easy')} />Easy</label>
+        <label><input type="radio" value="medium" checked={difficulty === 'medium'} onChange={() => setDifficulty('medium')} />Medium</label>
+        <label><input type="radio" value="hard"  checked={difficulty === 'hard'} onChange={() => setDifficulty('hard')} />Hard</label>
+      </div>
       <button type="button">start game</button>
       <p>{current}</p>
       <input type="text" value={inputVal} placeholder="Input letter" maxLength="1" />
