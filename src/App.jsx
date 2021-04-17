@@ -1,8 +1,15 @@
 import { useState, useEffect } from 'react';
-import { colors } from './constants';
-
+import { difficultyOptions } from './constants';
+import {
+  Button,
+  Difficulty,
+  LetterBoard,
+  ScoreBoard,
+  Input,
+} from './components';
 
 import './App.css';
+
 
 const App = () => {
   const alphabet = String.fromCharCode(...Array(123).keys()).slice(97).split('');
@@ -41,7 +48,7 @@ const App = () => {
 
   const generateNumber = () => {
     if(myInterval === 0) {
-      setMyInterval(3000);
+      setMyInterval(difficultyOptions[difficulty].timeout);
     }
     setInputVal('');
 
@@ -113,36 +120,26 @@ const App = () => {
     });
   }
 
-  const lettersMarkup = (
-    letters.map((l) => (
-      <span key={l.position}  style={{ color: colors[l.status] }}>{l.letter.toUpperCase()}</span>
-    ))
-  );
-
   return (
     <div className="App">
-      <div>
-        <label><input type="radio" value="easy" checked={difficulty === 'easy'} onChange={() => setDifficulty('easy')} />Easy</label>
-        <label><input type="radio" value="medium" checked={difficulty === 'medium'} onChange={() => setDifficulty('medium')} />Medium</label>
-        <label><input type="radio" value="hard"  checked={difficulty === 'hard'} onChange={() => setDifficulty('hard')} />Hard</label>
-      </div>
-      <button type="button" onClick={!gameInProgress ? startGame : stopGame}>{!gameInProgress ? 'Start game' : 'Stop game'}</button>
-      <p>{current}</p>
-      <input
-        disabled={!gameInProgress}
-        type="text"
-        onChange={guessNumber}
-        value={inputVal}
-        maxLength="1"
-        placeholder="Input letter"
+      <Difficulty
+        difficulty={difficulty}
+        setDifficulty={setDifficulty}
+        gameInProgress={gameInProgress}
       />
-      <div className="letters-wrapper">{lettersMarkup}</div>
-      <div>
-        <h4>SCORE</h4>
-        <p>{`Hit: ${score.hit}`}</p>
-        <p>{`Miss: ${score.miss}`}</p>
-        <p>{`Left: ${score.left}`}</p>
-      </div>
+      <Button
+        gameInProgress={gameInProgress}
+        startGame={startGame}
+        stopGame={stopGame}
+      />
+      <p className="current-letter">{current}</p>
+      <Input
+        gameInProgress={gameInProgress}
+        guessNumber={guessNumber}
+        inputVal={inputVal}
+      />
+      <LetterBoard letters={letters} />
+      <ScoreBoard score={score} />
     </div>
   );
 }

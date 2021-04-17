@@ -1,3 +1,27 @@
 .App {
   text-align: center;
 }
+
+.current-letter {
+  font-size: 70px;
+  font-weight: bold;;
+}
+
+
+
+.letters-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 400px;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.letters-wrapper span {
+  display: block;
+  width: 40px;
+  padding: 0 15px;
+  font-size: 40px;
+  font-weight: bold;
+}
