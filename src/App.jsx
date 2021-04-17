@@ -11,7 +11,6 @@ import {
 
 import './App.css';
 
-
 const App = () => {
   const alphabetNumbers = Array.from(Array(27).keys()).slice(1);
 
@@ -32,6 +31,8 @@ const App = () => {
   });
 
 
+  const [ inputRef, setInputRef] = useState(null);
+
   useEffect(() => {
     if(gameInProgress) {
       const interval = setInterval(() => {
@@ -46,6 +47,7 @@ const App = () => {
     if(myInterval === 0) {
       setMyInterval(difficultyOptions[difficulty].timeout);
     }
+    inputRef?.focus();
     setInputVal('');
     if(current > 0 && letters[current - 1].status === 'open') {
       letters[current - 1].status = 'miss';
@@ -143,9 +145,11 @@ const App = () => {
       {
         !message ?
           <Input
-          gameInProgress={gameInProgress}
-          guessNumber={guessNumber}
-          inputVal={inputVal}
+            gameInProgress={gameInProgress}
+            guessNumber={guessNumber}
+            inputVal={inputVal}
+            fieldRef={setInputRef}
+            setInputRef={setInputRef}
           />
         :
         <div className="score-message">

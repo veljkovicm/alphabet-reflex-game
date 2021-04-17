@@ -6,6 +6,7 @@ const Input = (props) => {
     gameInProgress,
     guessNumber,
     inputVal,
+    setInputRef
   } = props;
 
   const inputProps = {
@@ -13,6 +14,7 @@ const Input = (props) => {
     onChange: guessNumber,
     value: inputVal,
     maxLength: "1",
+    ref: (input) => { setInputRef(input) }
   }
 
   return (
@@ -32,6 +34,7 @@ Input.propTypes = {
   gameInProgress: PropTypes.bool.isRequired,
   guessNumber: PropTypes.func.isRequired,
   inputVal: PropTypes.string.isRequired,
+  setInputRef: PropTypes.func,
 }
 
 export default Input;
