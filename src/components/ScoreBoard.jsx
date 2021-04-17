@@ -1,6 +1,8 @@
-import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
-const ScoreBoard = ({ score }) => {
+const ScoreBoard = () => {
+  const score = useSelector(state => state.score);
+
   return (
     <>
       <h4>SCORE</h4>
@@ -9,10 +11,6 @@ const ScoreBoard = ({ score }) => {
       <p>{`Left: ${score.left}`}</p>
     </>
   )
-}
-
-ScoreBoard.propTypes = {
-  score: PropTypes.object,
 }
 
 export default ScoreBoard;

@@ -1,7 +1,9 @@
-import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import { colors } from '../constants';
 
-const LetterBoard = ({ letters }) => {
+const LetterBoard = () => {
+  const letters = useSelector(state => state.letters);
+
   const lettersMarkup = (
     letters.map((l) => (
       <span key={l.position} style={{ color: colors[l.status] }}>{l.letter.toUpperCase()}</span>
@@ -11,10 +13,6 @@ const LetterBoard = ({ letters }) => {
   return (
     <div className="letters-wrapper">{lettersMarkup}</div>
   )
-}
-
-LetterBoard.propTypes = {
-  letters: PropTypes.array,
 }
 
 export default LetterBoard;

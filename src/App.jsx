@@ -1,6 +1,14 @@
 import { useState, useEffect } from 'react';
 import { difficultyOptions } from './constants';
-import { formatAlphabet } from './helpers';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  gameStop,
+  setMyInterval,
+  setCurrent,
+  setHit,
+  setMiss,
+  setNumbers,
+ } from './redux/actions';
 import {
   Button,
   Difficulty,
@@ -13,23 +21,15 @@ import './App.css';
 
 
 const App = () => {
-  const alphabetNumbers = Array.from(Array(27).keys()).slice(1);
+  const dispatch = useDispatch()
 
-  const formattedAlphabet = formatAlphabet();
-
-  const [ letters, setLetters ] = useState(formattedAlphabet);
-  const [ current, setCurrent ] = useState(0);
-  const [ numbers, setNumbers] = useState(alphabetNumbers);
   const [ inputVal, setInputVal ] = useState('');
-  const [ difficulty, setDifficulty ] = useState('medium');
-  const [ myInterval, setMyInterval ] = useState(0);
-  const [ gameInProgress, setGameInProgress ] = useState(false);
-  const [ score, setScore ] = useState({
-    hit: 0,
-    miss: 0,
-    left: 26,
-  });
-
+  const gameInProgress = useSelector(state => state.gameInProgress);
+  const myInterval = useSelector(state => state.interval);
+  const difficulty = useSelector(state => state.difficulty);
+  const current = useSelector(state => state.current);
+  const numbers = useSelector(state => state.numbers);
+  const letters = useSelector(state => state.letters);
 
   useEffect(() => {
     if(gameInProgress) {
@@ -43,23 +43,23 @@ const App = () => {
 
   const generateNumber = () => {
     if(myInterval === 0) {
-      setMyInterval(difficultyOptions[difficulty].timeout);
+      dispatch(setMyInterval(difficultyOptions[difficulty].timeout));
     }
     setInputVal('');
-    if(current > 0 && letters[current - 1].status == 'open') {
+    if(current > 0 && letters[current - 1].status === 'open') {
       letters[current - 1].status = 'miss';
-      updateScore('miss');
+      dispatch(setMiss(numbers.length));
     }
 
     const randomElement = numbers[Math.floor(Math.random() * numbers.length)];
-    setCurrent(randomElement);
+    dispatch(setCurrent(randomElement));
 
     const remainingNumbers = numbers.filter((e) => e !== randomElement);
-    setNumbers(remainingNumbers)
+    dispatch(setNumbers(remainingNumbers));
 
     if(!numbers.length) {
-      setGameInProgress(false);
-      setMyInterval(0);
+      dispatch(gameStop());
+      dispatch(setMyInterval(0));
     }
   }
 
@@ -75,68 +75,22 @@ const App = () => {
 
     if(currentLetter === e.target.value.toUpperCase()) {
       letters[indexOfCurrent].status = 'hit';
-      updateScore('hit');
+      dispatch(setHit(numbers.length));
     } else {
       letters[indexOfCurrent].status = 'miss';
-      updateScore('miss');
+      dispatch(setMiss(numbers.length));
     }
     generateNumber();
   }
 
-  const startGame = () => {
-    setLetters(formattedAlphabet);
-    setNumbers(alphabetNumbers);
-    setCurrent(0);
-    setScore({
-      hit: 0,
-      miss: 0,
-      left: 26,
-    });
-    setGameInProgress(true);
-  }
-
-  const stopGame = () => {
-    setGameInProgress(false);
-    setLetters(formattedAlphabet);
-    setCurrent(0);
-    setScore({
-      hit: 0,
-      miss: 0,
-      left: 26,
-    });
-    setMyInterval(0);
-  }
-
-
-  const updateScore = (field) => {
-    setScore((prevState) => ({
-      ...prevState,
-      [field]: prevState[field] + 1,
-      left: numbers.length,
-    }));
-  }
-
-
   return (
     <div className="App">
-      <Difficulty
-        difficulty={difficulty}
-        setDifficulty={setDifficulty}
-        gameInProgress={gameInProgress}
-      />
-      <Button
-        gameInProgress={gameInProgress}
-        startGame={startGame}
-        stopGame={stopGame}
-      />
+      <Difficulty />
+      <Button />
       <p className="current-letter">{current}</p>
-      <Input
-        gameInProgress={gameInProgress}
-        guessNumber={guessNumber}
-        inputVal={inputVal}
-      />
-      <LetterBoard letters={letters} />
-      <ScoreBoard score={score} />
+      <Input guessNumber={guessNumber} inputVal={inputVal} />
+      <LetterBoard />
+      <ScoreBoard />
     </div>
   );
 }

@@ -1,12 +1,14 @@
-import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { setDifficulty } from '../redux/actions';
 import { difficultyOptions } from '../constants';
 
-const Difficulty = (props) => {
-  const {
-    difficulty,
-    setDifficulty,
-    gameInProgress,
-  } = props;
+const Difficulty = () => {
+  const gameInProgress = useSelector(state => state.gameInProgress);
+  const difficulty = useSelector(state => state.difficulty);
+
+  const dispatch = useDispatch();
+  const changeDifficulty = (diff) => dispatch(setDifficulty(diff));
+
 
   const inputMarkup = (
     Object.keys(difficultyOptions).map((e) => (
@@ -16,7 +18,7 @@ const Difficulty = (props) => {
           disabled={gameInProgress}
           value={difficultyOptions[e].value}
           checked={difficulty === difficultyOptions[e].value}
-          onChange={() => setDifficulty(difficultyOptions[e].value)}
+          onChange={() => changeDifficulty(difficultyOptions[e].value)}
         />
         {difficultyOptions[e].title}
       </label>
@@ -28,10 +30,5 @@ const Difficulty = (props) => {
   )
 }
 
-Difficulty.propTypes = {
-  difficulty: PropTypes.string.isRequired,
-  setDifficulty: PropTypes.func.isRequired,
-  gameInProgress: PropTypes.bool.isRequired,
-}
 
 export default Difficulty;

@@ -1,11 +1,9 @@
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
-const Input = (props) => {
-  const {
-    gameInProgress,
-    guessNumber,
-    inputVal,
-  } = props;
+
+const Input = ({ guessNumber, inputVal }) => {
+  const gameInProgress = useSelector(state => state.gameInProgress);
 
   return (
     <>
@@ -22,7 +20,6 @@ const Input = (props) => {
 }
 
 Input.propTypes = {
-  gameInProgress: PropTypes.bool.isRequired,
   guessNumber: PropTypes.func.isRequired,
   inputVal: PropTypes.string.isRequired,
 }
