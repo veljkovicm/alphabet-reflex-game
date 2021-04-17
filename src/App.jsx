@@ -20,7 +20,7 @@ const App = () => {
   const [ inputVal, setInputVal ] = useState('');
   const [ difficulty, setDifficulty ] = useState('medium');
   const [ myInterval, setMyInterval ] = useState(0);
-  const [ gameInProgress, setGameInProgress ] = useState(true);
+  const [ gameInProgress, setGameInProgress ] = useState(false);
   const [ score, setScore ] = useState({
     hit: 0,
     miss: 0,
@@ -91,6 +91,28 @@ const App = () => {
     generateNumber();
   }
 
+  const startGame = () => {
+    setLetters(formattedAlphabet);
+    setCurrent(0);
+    setScore({
+      hit: 0,
+      miss: 0,
+      left: 26,
+    });
+    setGameInProgress(true);
+  }
+
+  const stopGame = () => {
+    setGameInProgress(false);
+    setLetters(formattedAlphabet);
+    setCurrent(0);
+    setScore({
+      hit: 0,
+      miss: 0,
+      left: 26,
+    });
+  }
+
   const lettersMarkup = (
     letters.map((l) => (
       <span key={l.position}  style={{ color: colors[l.status] }}>{l.letter.toUpperCase()}</span>
@@ -104,7 +126,7 @@ const App = () => {
         <label><input type="radio" value="medium" checked={difficulty === 'medium'} onChange={() => setDifficulty('medium')} />Medium</label>
         <label><input type="radio" value="hard"  checked={difficulty === 'hard'} onChange={() => setDifficulty('hard')} />Hard</label>
       </div>
-      <button type="button">start game</button>
+      <button type="button" onClick={!gameInProgress ? startGame : stopGame}>{!gameInProgress ? 'Start game' : 'Stop game'}</button>
       <p>{current}</p>
       <input
         disabled={!gameInProgress}
