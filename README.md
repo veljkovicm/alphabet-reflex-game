@@ -2,6 +2,8 @@
 
 # LIVE DEMO: [reflex.veljkovicweb.dev](https://reflex.veljkovicweb.dev)
 
+### On the `feat/redux` branch, app state is managed by React Redux package.
+
 ## Starting the project:
 
 1. Clone the project: `git@github.com:veljkovicm/alphabet-reflex-game.git`
